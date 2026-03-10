@@ -8,7 +8,7 @@ import {
     registerDriver, getDriver, getAvailableClients,
     listClients, addClient, removeClient, getClient,
     sanitizeClient, dispatchDownload, dispatchList
-} from './torrent-clients'
+} from './torrent-clients/index.js'
 import qbittorrentDriver from './torrent-clients/qbittorrent.js'
 import { organizeTorrent, autoOrganizeAll } from './organize.js'
 
@@ -50,7 +50,7 @@ app.get('/api/torrent-clients/available', requireAuth, (_req, res) => {
     res.json(getAvailableClients())
 })
 app.get('/api/torrent-clients', requireAuth, (_req, res) => {
-    res.json(listClients().map(c => sanitizeClient(c)))
+    res.json(listClients().map((c: any) => sanitizeClient(c)))
 })
 app.post('/api/torrent-clients', requireAuth, (req, res) => {
     const { name, type, config } = req.body
@@ -222,7 +222,7 @@ app.post('/api/download', requireAuth, async (req, res) => {
     const url = req.body.torrent_url ?? req.body.magnet
     if (!url) { res.status(400).json({ error: 'torrent_url ou magnet requis' }); return }
     const results = await dispatchDownload(url)
-    res.status(results.every(r => r.ok) ? 200 : 207).json({ results })
+    res.status(results.every((r: any) => r.ok) ? 200 : 207).json({ results })
 })
 
 // ── Downloads — liste torrents Fankai ──────────────────────────
